@@ -105,3 +105,36 @@ while (opcion !== 5) {
 }
 
 console.log(productos);
+
+// Tarea 33i
+
+//pto 1
+//Al inicio del concurso los primeros lugares son para Ana, Oswaldo, Raúl, Celia, María y Antonio en ese respectivo orden.
+// a) utilizando un array imprima los nombres de los ganadores.
+// b) y si ahora se pidiera que se imprimiera en consola los ganadoes del último al primer? (de atrás para adelante)
+// c) imprima en consola la cantidad de veces que se repite cada vocal en todos los nombres de los participantes
+// d) imprima en consola los nombres que comiencen con la letra "A"
+
+const concursantes = ["Ana", "Oswaldo", "Raúl", "Celia", "María", "Antonio"];
+
+// herramientas para recorrer el array: FOR y
+
+// a)
+//       variable      condición           contador 
+for (let index = 0; index < concursantes.length; index++) {
+  const element = concursantes[index];
+  console.log(element);
+}
+
+// b)
+//concursantes.reverse()
+
+// const porque aunque pueda mutar (si le agrego un elemento al array) , no voy a pisar su valor
+const maxIndex = concursantes.length - 1; // para sacar el valor máximo de los índices
+
+for (let index = maxIndex; index >= 0; index--) { // un for que retrosede, inicializo en 5 (índice más alto) y baja de 1 en 1 hasta llegar a cero (primer índice)
+  const element = concursantes[index];
+  console.log(element);
+  
+}
+
