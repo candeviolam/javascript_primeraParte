@@ -88,3 +88,22 @@ if (resultadoFinal > 440000) {
 } else {
   alertaNoPagaImpuestos();
 }
+
+
+
+
+//ejercicios que viene para hacer 
+//usar la prompt
+//pedirle al usuario los valores
+//const valorA = prompt("")
+
+//convertir esos valores a number
+//hacer una calculadora
+
+//peridle al usuario por la consola qué operación quiere hacer
+//qué valores va a ulilizar (2 valores) -> NO USAR CICLOS (no querer hacer un while por dos valores por ej)
+//const respuestaA = prompt("Primer numero");
+//const resultadoB = prompt("segundo numero"); etccc
+
+//operar con funciones -> crear las funciones que se encarguen de realizar las operaciones (+, -, *, /)
+//Mostrar en un alert el resultado de la operación
