@@ -89,3 +89,32 @@ console.log(resultadoUno);
 console.log(resultadoDos);
 // console.log(resultadoTres);
 console.log(ParOImpar(numeroZ));
+
+//Esta función va a recibir como parámetro un array y lo va a retornar
+function InvertirArray(array) {
+  let nuevoArray = [];
+  const valor = array.length - 1;
+  //               índice se inicializaría en array.length - 1
+  for (let index = valor; index >= 0; index--) {
+    nuevoArray.push(array[index]);
+  }
+
+  return nuevoArray;
+}
+
+const primerArray = [10, 2, 3];
+const concursantesArray = [
+  "Ana",
+  "Oswaldo",
+  "Raúl",
+  "Celia",
+  "María",
+  "Antonio",
+];
+
+const invertido = InvertirArray(primerArray);
+const concursantesInvertido = InvertirArray(concursantesArray);
+
+console.log(invertido);
+console.log(concursantesInvertido);
+  
