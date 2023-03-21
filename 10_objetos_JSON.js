@@ -45,6 +45,10 @@ const empleados = [
     mail: "gero@gmail.com",
     legajo: "1",
     telefono: "0800",
+    es_soltero: false,
+    nombreCompleto: function () {  // ---> los obj pueden llevar adentro funciones
+      console.log(this.nombre + this.apellido);
+    },
   },
   {
     nombre: "Matías",
@@ -95,6 +99,6 @@ function crearTabla(nombre, apellido, puesto, comision) {
   </tr> `;
 }
 
- //crear un objeto de programación en base al análisis de un objeto de la vida real dentro de un array
- //crear un array de 3 objetos JSON de un obj de la vida real, tiene que tener por lo menos 5 llaves (propiedades)
- //elegir uno de eso e imprimir en consola cada una de sus propiedades (usar el índice o un FOR)
+//crear un objeto de programación en base al análisis de un objeto de la vida real dentro de un array
+//crear un array de 3 objetos JSON de un obj de la vida real, tiene que tener por lo menos 5 llaves (propiedades)
+//elegir uno de eso e imprimir en consola cada una de sus propiedades (usar el índice o un FOR)
