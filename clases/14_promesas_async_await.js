@@ -90,7 +90,7 @@ function getDataFromDataBaseWithDelay() {
 // console.log(getDataFromDataBaseWithDelay()); // ésto me da undefined porque los personajes "no existen" en la base de datos, xq estoy esperando los 3segs, a difirecnia de la primera función que sí me los devuelve
 // //                                              intento imprimir los personajes, pero todavía no los tengo en el servidor
 
-console.log("Sigo ejecutando por más que no volvió la data");
+// console.log("Sigo ejecutando por más que no volvió la data");
 /*  para que se me impriman los personajes en consola
 function getDataFromDataBaseWithDelay() { // async -> código asincrónico
   setTimeout(() => console.log(characters), 3000);
@@ -108,14 +108,18 @@ function getDataFromDataBaseWithDelay(){
 }
 */
 
-// Formas de decir a mi código que espere antes de seguir ejecutándose (console.log de que se está ejecuntando el código y dsp viene lo que tiene delay)
+// Formas de decir a mi código que ESPERE antes de seguir ejecutándose (console.log de que se está ejecuntando el código y dsp viene lo que tiene delay)
 // conceptos a ver -> PROMESAS - ASINCRONÍA -> cualquiera de los dos funciona
 
 // Promesa -> objeto de JS, simbólicamente representa un '"te prometo que voy a responder" pero espera acá, y cuando te responda procesá esa info'
+//         -> promesa: función que me devuelve un objeto
+// utilizo "promesas" cuando tenga alguna petición al servidor (gralmente vienen del back, del lado de Node JS; no del front, que más que nada maneja la promesa (.then(), .catch())) -> que mi sist antes de iniciar haga algo
 // Obtener datos de la base de datos con un promesa
 function getDataFromDataBasePromise() {
   //  setTimeout(() => characters, 3000); -> convertirlo en una promesa
+  //                 promesa adentro recibe como parám de constructor otra func
   //                     tiene adentro una función anónima, que automáticam recibe por parám las funciones resolve y reject (me sirven para poder terminar la promesa, es decir, para decir que se cumplió y responderle al front o usuario que hace la petición de mis datos)
+  //                           resolve y reject se pueden llamar como yo quiera (res, rej, etc), pero esos son los nombre "reales"
   return new Promise(function (resolve, reject) {
     //            ? por si characters no es null
     //                    si el array es mayor a 0, es decir si es que hay data
@@ -123,16 +127,20 @@ function getDataFromDataBasePromise() {
       //                       me devuelve characters antes de que resuelva la promesa (cómo obtenemos los personajes cuando llamamos a la función?)
       //    setTimeout(resolve(characters), 3000) -> en lugar de mandar directam "characters", le mando un obj respuesta
       setTimeout(
-        //              resolve retorna este obj cuando termino la promesa correctam (funciona como una especie de return)
+        //resolve retorna este obj de datos cuando la promesa se resuelve correctam (funciona como una especie de return)
         resolve({
+          // todo este objeto es el que sale en el response de abajo
           // un obj personalizado p/ indicarle al usuario que todo terminó en forma correcta
           ok: true,
           data: characters,
-        }),
+          msj: "Este obj lo estoy creando yo dentro del resolve para escribirlo en el .then()",
+        }), // sería lo mismo todo esto que poner resolve(characters), -> pero armo el obj para más claridad
         3000
       );
     }
+    // a los obj de resolve y reject los voy creando yo con los criterios que desee
     setTimeout(
+      // reject -> función que retorna el obj de datos de la promesa cuando fue rechazada
       reject({
         ok: false,
         error_message: "No hay datos de los personajes",
@@ -141,3 +149,42 @@ function getDataFromDataBasePromise() {
     );
   });
 }
+
+// cómo decirle a mi código que tiene que esperar
+
+//cuando llamo a la getDataFrom...Promise -> siempre que necesite llamarla para usarla, utilizar: .then() y .catch()
+getDataFromDataBasePromise()
+  //. -> me ofrece tres métodos: catch(), finally(), then()
+  // cada vez que mi promesa se resuelva, voy a llamar al método .then(); es decir, cada vez que mi promesa se resuelva hacemos:
+  // .then() -> espera a que esta promesa responda correctamente, y después/entonces escribimos la respuesta en la consola
+  //    esta respuesta es lo que yo le paso en el resolve por parámetro, voy a recibir el objeto que tiene el resolve
+  .then((response) => console.log("resolve", response))
+  //acto seguido va el .catch() -> recibir la respuesta en caso de que la promesa se resuelva en un error / manejo el reject a través del catch
+  //      "error" es simplemente como para colocarle un nombre al obj que tengo en el reject
+  .catch((error) => console.log("reject", error));
+
+// con función de flecha recibimos: 1. en response recibimos el obj que pasamos a través del resolve
+//                                  2. en error recibimos el obj que pasamos a través de reject
+
+// getDataFromDataBasePromise()
+//   .then((response) => {
+//     console.log(response);
+
+//     response.data.forEach((element) => {
+//       console.log(element);
+//     });
+//   })
+//   .catch((error) => console.log("reject", error));
+
+// valor por referencia vs valor por valor
+
+// ---------------------------
+
+// //                       callback -> función que se ejecuta dentro de otra función como respuesta a esa lógica
+// const saludo = (fun) => fun("hola mundo");
+// saludo((mensaje) => console.log(mensaje)); // ejecuta la función que recibo por parámetro
+
+
+// ----------------------------
+
+// crear funciones asíncronas o async await
