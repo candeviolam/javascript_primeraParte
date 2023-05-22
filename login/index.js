@@ -3,6 +3,10 @@ const MENSAJES = {
   error: "Las contraseñas deben coincidir",
 };
 
+const DB = {
+  usuario: "usuario",
+};
+
 //recuperar los elems del html a los cuales les vamos a asignar los eventos que deseamos escuchar
 const submit = document.getElementById("submit");
 const inputMail = document.getElementById("inputmail");
@@ -14,7 +18,15 @@ let password = "";
 //                               función anónima
 submit.addEventListener("click", function (e) {
   e.preventDefault();
-  const usuariolocalStorage = localStorage.getitem(JSON.parse("usuario"));
+  const usuarioLocalStorage = JSON.parse(localStorage.getItem(DB.usuario));
+  if (
+    usuarioLocalStorage.nombre !== mail ||
+    usuarioLocalStorage.password !== password
+  ) {
+    alert("Los datos no son correctos");
+  } else {
+    alert("Bienvenido " + mail);
+  }
 });
 
 inputMail.addEventListener("change", function (e) {
@@ -62,7 +74,7 @@ saveChanges.addEventListener("click", function (e) {
     }, 1000);
   } else {
     localStorage.setItem(
-      "usuario",
+      DB.usuario,
       JSON.stringify({
         nombre: createMail,
         password: createPass,
