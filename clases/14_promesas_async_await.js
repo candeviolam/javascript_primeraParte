@@ -3,6 +3,10 @@
 // operador condicional ternario
 // import y export
 
+import { getDataFromDataBasePromise } from "./14_promises.js"; // lo que viene abajo (base de datos)
+// import getDataFromDataBasePromise from "./14_promises.js"; // -> cuando no utilizo destructuring en el export (promises)
+
+/*  COMENTADO PARA HACER EL IMPORT Y EXPORT DE LOS OTROS ARCHIVOS 14_
 //#region BASE DE DATOS
 const tipos = {
   //objeto
@@ -52,6 +56,7 @@ const characters = [
   },
 ];
 //#endregion BASE DE DATOS
+*/
 
 //---------------------------
 
@@ -114,7 +119,10 @@ function getDataFromDataBaseWithDelay(){
 // Promesa -> objeto de JS, simbólicamente representa un '"te prometo que voy a responder" pero espera acá, y cuando te responda procesá esa info'
 //         -> promesa: función que me devuelve un objeto
 // utilizo "promesas" cuando tenga alguna petición al servidor (gralmente vienen del back, del lado de Node JS; no del front, que más que nada maneja la promesa (.then(), .catch())) -> que mi sist antes de iniciar haga algo
-// Obtener datos de la base de datos con un promesa
+// Obtener datos de la base de datos con una promesa
+
+/*  ------------> comentada la función por ejercicio de export e import
+
 function getDataFromDataBasePromise() {
   //  setTimeout(() => characters, 3000); -> convertirlo en una promesa
   //                 promesa adentro recibe como parám de constructor otra func
@@ -141,14 +149,17 @@ function getDataFromDataBasePromise() {
     // a los obj de resolve y reject los voy creando yo con los criterios que desee
     setTimeout(
       // reject -> función que retorna el obj de datos de la promesa cuando fue rechazada
-      reject({
+      resolve({ // ésto es reject pero editado para el ejercicio de la línea 365
         ok: false,
-        error_message: "No hay datos de los personajes",
+        // error_message: "No hay datos de los personajes", // -> editado para el ejercicio de la línea 365
+        data: null, // cuando no hay datos de los personajes en la base de datos / cuando ok es false
+        mensaje: "", // mensaje vacío
       }),
       3000
     );
   });
 }
+*/
 
 // cómo decirle a mi código que tiene que esperar
 
@@ -184,7 +195,179 @@ getDataFromDataBasePromise()
 // const saludo = (fun) => fun("hola mundo");
 // saludo((mensaje) => console.log(mensaje)); // ejecuta la función que recibo por parámetro
 
-
 // ----------------------------
 
-// crear funciones asíncronas o async await
+// trabajar con las promesas trabajando con algo que se llama ASINCRONÍA
+// crear funciones asíncronas o async await -> funcs asíncronas retornan promesas de forma implícita
+// await (palabra reservada) -> nos ahorramos usar el .then() y el .catch()
+
+//             Obtener data asíncrona
+// async -> indicándole a la func que sea asíncrona, va a tener que esperar la respuesta del servidor
+// async function getDataAsync(){ // esta func async sigue actuando como si fuera una promesa por fuera, pero yo sólo quiero utilizar la data
+//   console.log("Ejecutando respuesta desde una función asíncrona");
+//   //    response recibe tanto el valor de reject como de resolve
+//   //               usamos await para esperar la respuesta -> esperar hasta que esta promesa/func se resuelva
+//   //                     llamamos a la función de la promesa que estamos usando
+//   const response = await getDataFromDataBasePromise(); // await -> retornarme el resolve
+//   console.log(response);
+// }
+
+// getDataAsync();
+/*
+async function getDataAsync() {
+  console.log("Ejecutando respuesta desde una función asíncrona");
+  const response = await getDataFromDataBasePromise();
+  response.data.forEach((element) => {
+    const h1 = document.createElement("h1");
+    h1.innerText = element.nombre_heroe;
+    app.appendChild(h1);
+  });
+}
+
+getDataAsync();
+ */
+/*
+// try catch -> se usa para manejo de errores (prácticamente como el .then y .catch) pero se usa siempre que se quiera manejar el código de manera segura
+async function getDataAsync() {
+  try {
+    const response = await getDataFromDataBasePromise();
+    response.data.forEach((element) => {
+      const h1 = document.createElement("h1");
+      h1.innerText = element.nombre_heroe;
+      app.appendChild(h1);
+    });
+  } catch (error) {
+    // disparar un error en el momento que se ejecute o que salga ese error
+    throw new Error(error.error_msg); // sale como un error rojo en consola 
+    console.log(error.error_msg);
+    // usar cualqiuera de las dos opciones de arriba, pero así personalizo el msj
+    console.log("Verifique que la base de datos tenga datos"); 
+  }
+}
+
+getDataAsync();
+*/
+
+///// FETCH CON AWAIT O FETCH CON PROMESA, LAS DOS FORMAS DE USAR ASINCRONÍA -> ambas tienen el mismo resultado
+
+//obtener data del fetch
+/*
+async function getDataFromFetch() {
+  try {
+    //                     con el fetch voy a trabajar directamente con la respuesta (dif con then) -> la trabajo desde adentro
+    const response = await fetch(
+      // await para esperar la respuesta
+      "https://rickandmortyapi.com/api/character/?page=4"
+    );
+    const result = await response.json();
+    // trabajo con la respuesta recibida (parte de lo que dice arriba)
+    result.results.forEach((personaje) => {
+      const div = document.createElement("div");
+      const img = document.createElement("img");
+      const h3 = document.createElement("h3");
+      const button = document.createElement("button");
+      const hr = document.createElement("hr");
+      const br = document.createElement("br");
+
+      h3.innerText = personaje.name;
+      img.src = personaje.image;
+      button.innerText = "Detalle";
+      button.classList.add("btn");
+      button.classList.add("btn-primary");
+
+      //acá creamos el div incrustando los hijos
+      div.appendChild(h3);
+      div.appendChild(img);
+      div.appendChild(button);
+      div.appendChild(br);
+      div.appendChild(hr);
+
+      //agregar todo el div junto con los hijos asignados al div app del index
+      app.appendChild(div);
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+getDataFromFetch(); 
+*/
+
+//             esta función me devuelve una promesa
+async function getDataFromFetch() {
+  // trabajar esta función como si fuera un promesa (lo que viene abajo)
+  try {
+    const response = await fetch(
+      // await para esperar la respuesta
+      "https://rickandmortyapi.com/api/character/?page=4"
+    );
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// con la pomesa dentro del .then() puedo personalizar un poco más la respuesta porque trabajo desde adentro (dif con fetch)
+//                .then() -> fetch con promesa
+//                       trabajo con la respuesta antes de recibirla (parte de lo que dice arriba) -> la trabajo desde afuera
+getDataFromFetch().then((res) => {
+  res.results.forEach((personaje) => {
+    const div = document.createElement("div");
+    const img = document.createElement("img");
+    const h3 = document.createElement("h3");
+    const button = document.createElement("button");
+    const hr = document.createElement("hr");
+    const br = document.createElement("br");
+
+    h3.innerText = personaje.name;
+    img.src = personaje.image;
+    button.innerText = "Detalle";
+    button.classList.add("btn");
+    button.classList.add("btn-primary");
+
+    //acá creamos el div incrustando los hijos
+    div.appendChild(h3);
+    div.appendChild(img);
+    div.appendChild(button);
+    div.appendChild(br);
+    div.appendChild(hr);
+
+    //agregar todo el div junto con los hijos asignados al div app del index
+    app.appendChild(div);
+  });
+});
+
+///// FETCH CON AWAIT O FETCH CON PROMESA, LAS DOS FORMAS DE USAR ASINCRONÍA -> ambas tienen el mismo resultado
+
+// ----------------------------------------------
+
+// Operador condicional ternario || import - export
+//temas necesarior para trabajar con react
+
+const a = 10;
+
+// op condic tern: evalúa una condición, y luego del ? establece el valor de esa condición si es true o si es false
+//                % = módulo
+//                          ? -> op condic ternario - especie de if
+//                                     : -> de lo contrario - especie de else
+//                             true        false
+const mensaje = a % 2 === 0 ? "Es par" : "Es impar"; // "if-else más limpio/resumido"
+// console.log(mensaje);
+
+async function getPromise() {
+  const response = await getDataFromDataBasePromise();
+  // console.log(response);
+  // editada la línea 152 y 154 para éste ejemplo
+  //                               si la respuesta es true -> le pasamos la data, y sino, sale el msj
+  //                   si response no es null (?), entra a data, si data no es null (?), entra a length
+  //                                   si borro los datos de los characters veo el msj
+  const array = response?.data?.length > 0 ? response.data : "No hay resultados"; 
+  console.log(array); // me sale null porque el array de characters está vacío
+}
+
+// llamar a getPromise para que se imprima en la consola
+getPromise(); // me devuelve ok:true .... / si borro los datos de los personajes, me devuelve ok:false...
+
+// se puede incluso agregar estilos con operadores condicionales
+//const label = horario.Estado === Estado.Reservado ? "background-color: 'red'" : "background-color: 'yellow'";
